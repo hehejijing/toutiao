@@ -15,7 +15,7 @@ export const login = (mobile, code) => {
 }
 /**
  * 发送验证码
- * @param {*} mobile 手机号
+ * @param {String} mobile 手机号
  * @returns promise
  */
 export const getCodeApi = (mobile) => {
