@@ -10,26 +10,50 @@
         ><ArticleList :id="item.id"></ArticleList
       ></van-tab>
 
-      <span class="toutiao toutiao-gengduo1"></span>
+      <span class="toutiao toutiao-gengduo1" @click="show = true"></span>
     </van-tabs>
+    <!-- 频道弹层 -->
+    <van-popup
+      v-model="show"
+      position="bottom"
+      :style="{ height: '100%' }"
+      closeable
+      close-icon-position="top-left"
+      ><channelPopup
+        :myChannels="myChannels"
+        @close="show = false"
+        @change-active="active = $event"
+        @del-channel="delChannel"
+        @addChannel="addChannel"
+      ></channelPopup
+    ></van-popup>
   </div>
 </template>
 
 <script>
-import { getMyChannel as getMyChannelAPI } from '@/api'
+import {
+  getMyChannel as getMyChannelAPI,
+  delChannel,
+  addChannel,
+  steMyChannelToLocal,
+  getMyChannelByLocal
+} from '@/api'
 import ArticleList from './componets/ArticleList.vue'
+import channelPopup from './componets/channelPopup.vue'
 export default {
   data() {
     return {
       active: 0,
-      myChannels: []
+      myChannels: [],
+      show: false
     }
   },
   components: {
-    ArticleList
+    ArticleList,
+    channelPopup
   },
   created() {
-    this.getMyChannel()
+    this.initMyChannels()
   },
   methods: {
     async getMyChannel() {
@@ -41,6 +65,60 @@ export default {
         console.dir(error)
         this.$toast.fail('获取频道失败，请刷新')
       }
+    },
+    async delChannel(id) {
+      this.$toast.loading({
+        message: '正在删除',
+        forbidClick: true
+      })
+      try {
+        const newChannels = this.myChannels.filter((item) => item.id !== id)
+        if (this.isLogin) {
+          await delChannel(id)
+        } else {
+          steMyChannelToLocal(newChannels)
+        }
+        this.myChannels = newChannels
+        this.$toast.success('你妈没了')
+      } catch (error) {
+        this.$toast.fail('哟，你妈还在呢')
+      }
+    },
+    async addChannel(channel) {
+      this.$toast.loading({
+        message: '正在添加',
+        forbidClick: true
+      })
+      try {
+        if (this.isLogin) {
+          await addChannel(channel.id, this.myChannels.length)
+        } else {
+          steMyChannelToLocal([...this.myChannels, channel])
+        }
+        this.$toast.success('你爹来啦')
+        this.myChannels.push(channel)
+      } catch (error) {
+        this.$toast.fail('你爹在路上')
+      }
+    },
+    initMyChannels() {
+      if (this.isLogin) {
+        this.getMyChannel()
+      } else {
+        const myChannels = getMyChannelByLocal()
+        console.log(111111111111111)
+        console.log(myChannels)
+        if (myChannels) {
+          this.myChannels = myChannels
+        } else {
+          this.getMyChannel()
+        }
+      }
+    }
+  },
+  computed: {
+    isLogin() {
+      return !!this.$store.state.tokenObj.token
     }
   }
 }
