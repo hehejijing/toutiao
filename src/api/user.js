@@ -23,3 +23,9 @@ export const getCodeApi = (mobile) => {
     url: `/v1_0/sms/codes/${mobile}`
   })
 }
+
+export const getUserInfo = () => {
+  return request({
+    url: '/v1_0/user/profile'
+  })
+}

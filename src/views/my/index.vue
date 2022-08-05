@@ -2,7 +2,9 @@
   <div>
     <!-- 头部 -->
     <header>
-      <div class="login" v-if="isLogin">登录盒子</div>
+      <div class="login" v-if="isLogin">登录盒子
+        <button @click="$router.push('./user')">两极反转</button>
+      </div>
       <div class="logout" v-else>未登录盒子</div>
     </header>
     <!-- 中间 -->
