@@ -11,12 +11,39 @@
       <!-- input file 方法 accept=".png,.jpg" 表示只能选择特定后缀名的文件  hidden  表示隐藏 不可见 -->
       <input type="file" hidden ref="file" @change="selectPhoto" />
     </van-cell>
+    <van-cell
+      title="昵称"
+      :value="userInfo.name"
+      is-link
+      @click="showNickName = true"
+    />
+    <van-popup
+      v-model="showNickName"
+      position="bottom"
+      :style="{ height: '100%' }"
+      ><edit-nickName :nickName="userInfo.name" @reLoad="reLoad"></edit-nickName
+    ></van-popup>
+    <van-cell
+      title="性别"
+      :value="userInfo.gender == 1 ? '女' : '男'"
+      is-link
+      @click="showPopupSex"
+    />
+    <van-popup v-model="showSex" position="bottom" :style="{ height: '50%' }"
+      ><edit-sex></edit-sex
+    ></van-popup>
+
+    <van-cell title="生日" :value="userInfo.birthday" is-link />
     <van-popup
       v-model="isShowAvator"
       class="avator-popup"
       closeable
       :style="{ width: '100%', height: '100%' }"
-      ><update-avator @update-avator="userInfo.photo = $event" :photo="photo" v-if="isShowAvator"></update-avator
+      ><update-avator
+        @update-avator="userInfo.photo = $event"
+        :photo="photo"
+        v-if="isShowAvator"
+      ></update-avator
     ></van-popup>
   </div>
 </template>
@@ -24,6 +51,8 @@
 <script>
 import { getUserInfo } from '@/api'
 import UpdateAvator from './components/UpdateAvator.vue'
+import EditNickName from './components/EditNickName.vue'
+import EditSex from './components/EditSex.vue'
 import { resoveToBase64 } from '@/utils/toBase64'
 export default {
   name: 'User',
@@ -31,11 +60,15 @@ export default {
     return {
       userInfo: {},
       isShowAvator: false,
-      photo: ''
+      photo: '',
+      showNickName: false,
+      showSex: false
     }
   },
   components: {
-    UpdateAvator
+    UpdateAvator,
+    EditNickName,
+    EditSex
   },
   methods: {
     async getUserInfo() {
@@ -68,7 +101,25 @@ export default {
       this.photo = url
       e.target.value = ''
       this.isShowAvator = true
+    },
+
+    async reLoad(message) {
+      this.userInfo.name = message
+      const { data } = await getUserInfo()
+      if (data.data.name !== message) {
+        this.$toast.fail('修改失败，请重试')
+        this.userInfo = data.data
+      }
+      this.$toast.success('修改成功')
     }
+    // async uploadProfile() {
+    //   const name = this.message
+    //   const data = {
+    //     name: name
+    //   }
+    //   const res = await uploadProfile(data)
+    //   console.log(res)
+    // }
   },
   created() {
     this.getUserInfo()

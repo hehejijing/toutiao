@@ -24,6 +24,7 @@ export const getCodeApi = (mobile) => {
   })
 }
 
+// 获取用户信息
 export const getUserInfo = () => {
   return request({
     url: '/v1_0/user/profile'
@@ -47,5 +48,13 @@ export const uploadAvator = (file) => {
     url: 'v1_0/user/photo',
     method: 'PATCH',
     data: fm
+  })
+}
+
+export const uploadProfile = (data) => {
+  return request({
+    url: '/v1_0/user/profile',
+    method: 'PATCH',
+    data
   })
 }
