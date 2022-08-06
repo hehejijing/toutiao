@@ -12,23 +12,26 @@
       <input type="file" hidden ref="file" @change="selectPhoto" />
     </van-cell>
     <van-popup
-        v-model="isShowAvator"
-        class="avator-popup"
-        closeable
-        :style="{ width: '100%', height: '100%' }"
-        ><update-avator></update-avator></van-popup>
+      v-model="isShowAvator"
+      class="avator-popup"
+      closeable
+      :style="{ width: '100%', height: '100%' }"
+      ><update-avator @update-avator="userInfo.photo = $event" :photo="photo" v-if="isShowAvator"></update-avator
+    ></van-popup>
   </div>
 </template>
 
 <script>
 import { getUserInfo } from '@/api'
 import UpdateAvator from './components/UpdateAvator.vue'
+import { resoveToBase64 } from '@/utils/toBase64'
 export default {
   name: 'User',
   data() {
     return {
       userInfo: {},
-      isShowAvator: false
+      isShowAvator: false,
+      photo: ''
     }
   },
   components: {
@@ -43,7 +46,27 @@ export default {
         this.$toast.fail('获取失败，请刷新')
       }
     },
-    selectPhoto() {
+    // 选择图片后
+    async selectPhoto(e) {
+      // 第一种方法
+      //   // 1.获取选择图片的文件对象
+      //   // e.target 触发事件的元素
+      //   // file.files 伪数组，储存选择的所有的文件对象
+      //   const file = e.target.files[0]
+      //   // 2.把file 文件对象处理成img标签可识别的url
+      //   // URL.createObjectURL(file对象) --> img可识别的url
+      //   const url = window.URL.createObjectURL(file)
+      //   console.log(url)
+      //   // 3.传递url
+      //   this.photo = url
+      //   // 4.清空value 避免无法连续选中同一张图片
+      //   e.target.value = ''
+      //   this.isShowAvator = true
+      // 第二种方法
+      const file = e.target.files[0]
+      const url = await resoveToBase64(file)
+      this.photo = url
+      e.target.value = ''
       this.isShowAvator = true
     }
   },
