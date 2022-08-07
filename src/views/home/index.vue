@@ -112,8 +112,8 @@ export default {
         this.getMyChannel()
       } else {
         const myChannels = getMyChannelByLocal()
-        console.log(111111111111111)
-        console.log(myChannels)
+        // console.log(111111111111111)
+        // console.log(myChannels)
         if (myChannels) {
           this.myChannels = myChannels
         } else {

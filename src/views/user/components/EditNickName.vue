@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { uploadProfile } from '@/api'
+// import { uploadProfile } from '@/api'
 export default {
   data() {
     return {
@@ -42,19 +42,19 @@ export default {
       this.message = this.nickName
     },
     onClickRight() {
-      this.uploadProfile()
+      // this.uploadProfile()
       // this.$emit('reLoad', true)
-      this.$emit('reLoad', this.message)
+      this.$emit('uploadProfile', this.message)
       this.$parent.$parent.showNickName = false
-    },
-    async uploadProfile() {
-      const name = this.message
-      const data = {
-        name: name
-      }
-      const res = await uploadProfile(data)
-      console.log(res)
     }
+    // async uploadProfile() {
+    //   const name = this.message
+    //   const data = {
+    //     name: name
+    //   }
+    //   const res = await uploadProfile(data)
+    //   console.log(res)
+    // }
   }
 }
 </script>
