@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="登录" />
+    <van-nav-bar title="登录" left-arrow @click-left="$router.back()" />
     <van-form @submit="onSubmit" ref="form" class="form">
       <van-field
         v-model="mobile"
@@ -116,6 +116,9 @@ export default {
 .van-nav-bar {
   background-color: #3296fa;
   :deep(.van-nav-bar__title) {
+    color: #fff;
+  }
+  :deep(.van-icon-arrow-left){
     color: #fff;
   }
 }

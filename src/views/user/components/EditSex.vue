@@ -7,7 +7,7 @@
       @confirm="onConfirm"
       @cancel="onCancel"
       ref="sex"
-      default-index="sexIndex"
+      :default-index="sexIndex"
     />
   </div>
 </template>
