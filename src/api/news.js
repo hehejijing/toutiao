@@ -15,3 +15,9 @@ export const getArticleAPI = (channelId, timestamp) => {
     }
   })
 }
+
+export const getArticleInfo = (artid) => {
+  return request({
+    url: `/v1_0/articles/${artid}`
+  })
+}

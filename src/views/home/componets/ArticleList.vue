@@ -56,6 +56,7 @@ export default {
       try {
         const { data } = await getArticleAPI(this.id, +new Date())
         this.articles = data.data.results
+        console.log(this.articles)
         this.pre_timestamp = data.data.pre_timestamp
       } catch (error) {
         this.$toast.fail('看成败 人生豪迈 只不过是重头再来')
@@ -82,6 +83,11 @@ export default {
         this.loading = false
         this.refreshLoading = false
       }
+    },
+    getArticleInfo(id) {
+      console.log(1111)
+      // const { data } = await getArticleInfo(id)
+      // console.log(data)
     }
   }
 }

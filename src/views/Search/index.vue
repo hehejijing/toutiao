@@ -63,7 +63,7 @@ export default {
     }
   },
   created() {
-    this.history = localStorage.getItem('HISTORY').split(',')
+    this.history = localStorage.getItem('HISTORY').split(',') || []
   },
   computed: {
     component() {
@@ -85,6 +85,5 @@ export default {
     color: #fff;
   }
 }
-
 </style>
 >
