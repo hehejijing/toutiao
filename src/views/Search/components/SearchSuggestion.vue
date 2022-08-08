@@ -4,6 +4,7 @@
       icon="search"
       v-for="(item, index) in highLightSuggestions"
       :key="index"
+      @click="searchSuggestions(index)"
     >
       <template #title> <span v-html="item"></span></template
     ></van-cell>
@@ -53,7 +54,10 @@ export default {
       } catch (error) {
         this.$toast.fail('获取建议失败')
       }
-    }, 300)
+    }, 300),
+    searchSuggestions(index) {
+      this.$emit('searchSuggestions', this.suggestions[index])
+    }
   }
 }
 </script>

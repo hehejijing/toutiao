@@ -50,11 +50,25 @@ export const uploadAvator = (file) => {
     data: fm
   })
 }
-
+/**
+ * 更新用户信息
+ * @param {*} data 需要更新的信息
+ * @returns promise
+ */
 export const uploadProfile = (data) => {
   return request({
     url: '/v1_0/user/profile',
     method: 'PATCH',
     data
+  })
+}
+
+/**
+ * 获取用户基本信息
+ * @returns  promise
+ */
+export const getUser = () => {
+  return request({
+    url: '/v1_0/user'
   })
 }

@@ -12,7 +12,14 @@
         @cancel="$router.push('/')"
       />
     </form>
-    <component :is="component" :keywords="keywords" ></component>
+
+    <component
+      :is="component"
+      :keywords="keywords"
+      @searchHistory="searchHistory"
+      @searchSuggestions="searchSuggestions"
+    ></component>
+
     <!-- <search-history></search-history>
     <search-suggestion></search-suggestion>
     <search-results></search-results> -->
@@ -28,7 +35,8 @@ export default {
   data() {
     return {
       keywords: '',
-      isShowSearchResults: false
+      isShowSearchResults: false,
+      history: []
     }
   },
   components: {
@@ -38,11 +46,24 @@ export default {
   },
   methods: {
     onsearch() {
+      this.history.unshift(this.keywords)
+      localStorage.setItem('HISTORY', this.history)
       this.isShowSearchResults = true
     },
     onSearchFocus() {
       this.isShowSearchResults = false
+    },
+    searchHistory(val) {
+      this.keywords = val
+      this.onsearch()
+    },
+    searchSuggestions(val) {
+      this.keywords = val
+      this.onsearch()
     }
+  },
+  created() {
+    this.history = localStorage.getItem('HISTORY').split(',')
   },
   computed: {
     component() {
@@ -64,5 +85,6 @@ export default {
     color: #fff;
   }
 }
+
 </style>
 >

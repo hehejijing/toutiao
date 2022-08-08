@@ -4,38 +4,33 @@
     <header>
       <div class="login" v-if="isLogin">
         <div class="userinfo">
-          <van-image
-            round
-            width="67"
-            height="67"
-            src="https://img01.yzcdn.cn/vant/cat.jpeg"
-          />
-          <span>我爱一条柴</span>
+          <van-image round width="67" height="67" :src="user.photo" />
+          <span>{{ user.name }}</span>
           <button @click="$router.push('./user')" class="btn">编辑资料</button>
         </div>
         <van-grid class="detail" :border="false">
           <van-grid-item>
             <template #default>
-              <span>0</span>
+              <span>{{ user.art_count }}</span>
               <span>头条</span>
             </template>
           </van-grid-item>
           <van-grid-item>
             <template #default>
-              <span>0</span>
-              <span>头条</span>
+              <span>{{ user.fans_count }}</span>
+              <span>粉丝</span>
             </template>
           </van-grid-item>
           <van-grid-item>
             <template #default>
-              <span>0</span>
-              <span>头条</span>
+              <span>{{ user.follow_count }}</span>
+              <span>关注</span>
             </template>
           </van-grid-item>
           <van-grid-item>
             <template #default>
-              <span>0</span>
-              <span>头条</span>
+              <span>{{ user.like_count }}</span>
+              <span>获赞</span>
             </template>
           </van-grid-item>
         </van-grid>
@@ -66,11 +61,25 @@
 </template>
 
 <script>
+import { getUser } from '@/api'
 export default {
+  data() {
+    return {
+      user: {}
+    }
+  },
   methods: {
     logout() {
       this.$store.commit('SET_TOKEN', {})
+    },
+    async getUser() {
+      const { data } = await getUser()
+      this.user = data.data
+      console.log(data)
     }
+  },
+  created() {
+    this.getUser()
   },
   computed: {
     isLogin() {
@@ -119,7 +128,7 @@ export default {
   }
 }
 .aaa {
-  height: 1334px;
+  height: 1234px;
   background-color: #f5f7f9;
 }
 .login {
@@ -127,6 +136,7 @@ export default {
   background-size: 100% 100%;
   width: 100%;
   height: 400px;
+  overflow: hidden;
   position: relative;
   .userinfo {
     width: 100%;
