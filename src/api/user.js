@@ -72,3 +72,29 @@ export const getUser = () => {
     url: '/v1_0/user'
   })
 }
+
+/**
+ *关注用户
+ * @returns
+ */
+export const followings = (id) => {
+  return request({
+    url: '/v1_0/user/followings',
+    method: 'POST',
+    data: {
+      target: id
+    }
+  })
+}
+
+/**
+ * 取消关注用户
+ * @param {*} id
+ * @returns
+ */
+export const cancelFollowing = (id) => {
+  return request({
+    url: `/v1_0/user/followings/${id}`,
+    method: 'delete'
+  })
+}

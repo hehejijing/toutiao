@@ -48,7 +48,7 @@ export default {
       required: true
     }
   },
-  created() {
+  mounted() {
     this.getFirstPageArticles()
   },
   methods: {

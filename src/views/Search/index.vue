@@ -46,8 +46,9 @@ export default {
   },
   methods: {
     onsearch() {
+      this.history = JSON.parse(localStorage.getItem('HISTORY')) || []
       this.history.unshift(this.keywords)
-      localStorage.setItem('HISTORY', this.history)
+      localStorage.setItem('HISTORY', JSON.stringify(this.history))
       this.isShowSearchResults = true
     },
     onSearchFocus() {
@@ -63,7 +64,7 @@ export default {
     }
   },
   created() {
-    this.history = localStorage.getItem('HISTORY').split(',') || []
+    this.history = JSON.parse(localStorage.getItem('HISTORY')) || []
   },
   computed: {
     component() {

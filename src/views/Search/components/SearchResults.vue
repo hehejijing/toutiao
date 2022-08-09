@@ -61,7 +61,6 @@ export default {
       }
     },
     async onRefresh() {
-      // 清空列表数据
       this.finished = false
 
       // 重新加载数据

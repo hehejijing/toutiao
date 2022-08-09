@@ -24,16 +24,25 @@
           </div>
         </template>
         <template #default>
-          <van-button type="info" round>➕ 关注</van-button>
+          <van-button
+            type="info"
+            round
+            @click="changeFollowing(articleInfo.aut_id)"
+            ><span v-if="articleInfo.is_followed">已关注</span
+            ><span v-else>➕ 关注</span></van-button
+          >
         </template>
       </van-cell>
-      <p class="article" v-html="articleInfo.content"></p>
+      <p class="article markdown-body" v-html="articleInfo.content"></p>
     </div>
+    <underSide></underSide>
   </div>
 </template>
 
 <script>
-import { getArticleInfo } from '@/api'
+import { getArticleInfo, followings, cancelFollowing } from '@/api'
+import './github-markdown.css'
+import underSide from './components/underside.vue'
 export default {
   data() {
     return {
@@ -45,10 +54,36 @@ export default {
       const { data } = await getArticleInfo(this.$route.params.id)
       this.articleInfo = data.data
       console.log(data)
+    },
+    async changeFollowing(id) {
+      if (this.articleInfo.is_followed) {
+        await cancelFollowing(id)
+        const { data } = await getArticleInfo(this.$route.params.id)
+        if (data.data.is_followed === false) {
+          this.articleInfo.is_followed = false
+          this.$toast.success('取消关注成功')
+        } else {
+          this.$toast.fail('取消关注失败，请重试')
+        }
+        // console.log(data)
+        // console.log(1)
+      } else {
+        const { data } = await followings(id)
+        if (data.message === 'OK') {
+          this.articleInfo.is_followed = true
+          this.$toast.success('关注成功')
+        } else {
+          this.$toast.fail('关注失败，请重试')
+        }
+      }
+      // this.articleInfo.is_followed = !this.articleInfo.is_followed
     }
   },
   created() {
     this.getArticleInfo()
+  },
+  components: {
+    underSide
   }
 }
 </script>
@@ -63,7 +98,7 @@ export default {
 }
 .content {
   padding: 25px 32px;
-  max-height: 1200px;
+  max-height: 1100px;
   overflow: auto;
   .van-cell {
     padding: unset;
@@ -82,16 +117,16 @@ export default {
     height: unset;
     line-height: 2;
   }
-  .article {
-    font-size: 12px;
-    :deep(pre) {
-      max-width: 100%;
-      overflow: scroll;
-    }
-    :deep(img) {
-      width: 100%;
-    }
-  }
+  // .article {
+  //   font-size: 12px;
+  //   :deep(pre) {
+  //     max-width: 100%;
+  //     overflow: scroll;
+  //   }
+  //   :deep(img) {
+  //     width: 100%;
+  //   }
+  // }
 }
 h1 {
   font-size: 40px;
