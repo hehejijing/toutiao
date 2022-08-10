@@ -34,8 +34,14 @@
         </template>
       </van-cell>
       <p class="article markdown-body" v-html="articleInfo.content"></p>
+      <van-divider>正文结束</van-divider>
+      <comments></comments>
     </div>
-    <underSide></underSide>
+    <underSide
+      :articleInfo="articleInfo"
+      @good="good"
+      @collect="collect"
+    ></underSide>
   </div>
 </template>
 
@@ -43,6 +49,7 @@
 import { getArticleInfo, followings, cancelFollowing } from '@/api'
 import './github-markdown.css'
 import underSide from './components/underside.vue'
+import comments from './components/comments'
 export default {
   data() {
     return {
@@ -54,6 +61,7 @@ export default {
       const { data } = await getArticleInfo(this.$route.params.id)
       this.articleInfo = data.data
       console.log(data)
+      console.log(this.$route.params.id)
     },
     async changeFollowing(id) {
       if (this.articleInfo.is_followed) {
@@ -77,13 +85,20 @@ export default {
         }
       }
       // this.articleInfo.is_followed = !this.articleInfo.is_followed
+    },
+    good(attitude) {
+      this.articleInfo.attitude = attitude
+    },
+    collect(isCollect) {
+      this.articleInfo.is_collected = isCollect
     }
   },
   created() {
     this.getArticleInfo()
   },
   components: {
-    underSide
+    underSide,
+    comments
   }
 }
 </script>
@@ -117,16 +132,6 @@ export default {
     height: unset;
     line-height: 2;
   }
-  // .article {
-  //   font-size: 12px;
-  //   :deep(pre) {
-  //     max-width: 100%;
-  //     overflow: scroll;
-  //   }
-  //   :deep(img) {
-  //     width: 100%;
-  //   }
-  // }
 }
 h1 {
   font-size: 40px;

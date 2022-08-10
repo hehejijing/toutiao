@@ -21,3 +21,52 @@ export const getArticleInfo = (artid) => {
     url: `/v1_0/articles/${artid}`
   })
 }
+
+/**
+ *  点赞文章
+ * @param {*} id  文章id
+ * @returns  promise
+ */
+export const likes = (id) => {
+  return request({
+    url: '/v1_0/article/likings',
+    method: 'POST',
+    data: {
+      target: id
+    }
+  })
+}
+
+/**
+ * 取消点赞文章
+ * @param {*} id 文章id
+ * @returns promise
+ */
+export const cancelLikes = (id) => {
+  return request({
+    url: `/v1_0/article/likings/${id}`,
+    method: 'delete'
+  })
+}
+
+/**
+ *收藏文章
+ * @param {*} id文章id
+ * @returns promise
+ */
+export const collection = (id) => {
+  return request({
+    url: '/v1_0/article/collections',
+    method: 'POST',
+    data: {
+      target: id
+    }
+  })
+}
+
+export const cancelCollection = (id) => {
+  return request({
+    url: `/v1_0/article/collections/${id}`,
+    method: 'delete'
+  })
+}
