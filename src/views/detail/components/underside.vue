@@ -1,19 +1,28 @@
 <template>
   <div class="underSide">
     <div class="left">
-      <van-button plain hairline type="primary" class="btn" round
+      <van-button
+        plain
+        hairline
+        type="primary"
+        class="btn"
+        round
+        @click="showPopup"
         >写评论
       </van-button>
+      <van-popup v-model="show" position="bottom" :style="{ height: '30%' }">内容</van-popup>
     </div>
     <div class="right">
       <van-icon name="comment-o" :badge="articleInfo.comm_count" />
       <van-icon
         :name="articleInfo.is_collected ? 'star' : 'star-o'"
         @click="isCollect(articleInfo.art_id)"
+        :class="articleInfo.is_collected ? 'star' : ''"
       />
       <van-icon
         :name="articleInfo.attitude === 1 ? 'good-job' : 'good-job-o'"
         @click="isLikes(articleInfo.art_id)"
+        :class="articleInfo.attitude === 1 ? 'good' : ''"
       />
       <van-icon name="share-o" @click="showShare = true" />
     </div>
@@ -31,6 +40,7 @@ import { likes, cancelLikes, collection, cancelCollection } from '@/api'
 export default {
   data() {
     return {
+      show: false,
       collection: 'star-o',
       showShare: false,
       options: [
@@ -46,6 +56,9 @@ export default {
     onSelect(option) {
       this.$toast(option.name)
       this.showShare = false
+    },
+    showPopup() {
+      this.show = true
     },
     async isLikes(id) {
       if (this.articleInfo.attitude === -1) {
@@ -107,6 +120,10 @@ export default {
     flex: 1;
     justify-content: space-around;
     align-items: center;
+  }
+  .star,
+  .good {
+    color: rgb(139, 218, 36);
   }
 }
 </style>

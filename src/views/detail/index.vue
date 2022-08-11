@@ -35,7 +35,10 @@
       </van-cell>
       <p class="article markdown-body" v-html="articleInfo.content"></p>
       <van-divider>正文结束</van-divider>
-      <comments></comments>
+      <comments
+        :articleComments="articleComments"
+        @goodComment="goodComment"
+      ></comments>
     </div>
     <underSide
       :articleInfo="articleInfo"
@@ -46,22 +49,29 @@
 </template>
 
 <script>
-import { getArticleInfo, followings, cancelFollowing } from '@/api'
+import {
+  getArticleInfo,
+  followings,
+  cancelFollowing,
+  getArticleComment
+} from '@/api'
 import './github-markdown.css'
 import underSide from './components/underside.vue'
 import comments from './components/comments'
 export default {
   data() {
     return {
-      articleInfo: {}
+      articleInfo: {},
+      articleComments: {}
     }
   },
   methods: {
     async getArticleInfo() {
       const { data } = await getArticleInfo(this.$route.params.id)
       this.articleInfo = data.data
-      console.log(data)
-      console.log(this.$route.params.id)
+      this.getArticleComment()
+      // console.log(data)
+      // console.log(this.$route.params.id)
     },
     async changeFollowing(id) {
       if (this.articleInfo.is_followed) {
@@ -91,6 +101,15 @@ export default {
     },
     collect(isCollect) {
       this.articleInfo.is_collected = isCollect
+    },
+    async getArticleComment() {
+      console.log(this.articleInfo.art_id)
+      const { data } = await getArticleComment(this.articleInfo.art_id)
+      this.articleComments = data.data
+      console.log(data)
+    },
+    goodComment(index) {
+      this.articleComments.results[index].is_liking = !this.articleComments.results[index].is_liking
     }
   },
   created() {
