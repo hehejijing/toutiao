@@ -44,6 +44,7 @@
       :articleInfo="articleInfo"
       @good="good"
       @collect="collect"
+      @publish="publish"
     ></underSide>
   </div>
 </template>
@@ -53,7 +54,8 @@ import {
   getArticleInfo,
   followings,
   cancelFollowing,
-  getArticleComment
+  getArticleComment,
+  commentArticle
 } from '@/api'
 import './github-markdown.css'
 import underSide from './components/underside.vue'
@@ -109,7 +111,18 @@ export default {
       console.log(data)
     },
     goodComment(index) {
-      this.articleComments.results[index].is_liking = !this.articleComments.results[index].is_liking
+      this.articleComments.results[index].is_liking =
+        !this.articleComments.results[index].is_liking
+    },
+    async publish(content) {
+      try {
+        const { data } = await commentArticle(this.articleInfo.art_id, content)
+        console.log(data)
+
+        this.$toast.success('发布成功').$nextTick(location.reload())
+      } catch (error) {
+        this.$toast.fail('发布评论失败，请重试')
+      }
     }
   },
   created() {

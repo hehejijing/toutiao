@@ -10,7 +10,9 @@
         @click="showPopup"
         >写评论
       </van-button>
-      <van-popup v-model="show" position="bottom" :style="{ height: '30%' }">内容</van-popup>
+      <van-popup v-model="show" position="bottom" :style="{ height: '18%' }"
+        ><to-comment @publish="publish"></to-comment
+      ></van-popup>
     </div>
     <div class="right">
       <van-icon name="comment-o" :badge="articleInfo.comm_count" />
@@ -37,6 +39,7 @@
 
 <script>
 import { likes, cancelLikes, collection, cancelCollection } from '@/api'
+import toComment from './toComment.vue'
 export default {
   data() {
     return {
@@ -51,6 +54,9 @@ export default {
         { name: '二维码', icon: 'qrcode' }
       ]
     }
+  },
+  components: {
+    toComment
   },
   methods: {
     onSelect(option) {
@@ -89,6 +95,10 @@ export default {
 
         console.log(data)
       }
+    },
+    publish(content) {
+      this.show = false
+      this.$emit('publish', content)
     }
   },
   props: {
